@@ -3,7 +3,7 @@
  * Enables offline functionality
  */
 
-const CACHE_NAME = 'field-inspector-v2';
+const CACHE_NAME = 'field-inspector-v6';
 const ASSETS = [
     './',
     './index.html',
@@ -15,6 +15,7 @@ const ASSETS = [
     './js/ui.js',
     './js/app.js',
     './manifest.json',
+    './icons/logo.png',
     './icons/icon-192.png',
     './icons/icon-512.png'
 ];

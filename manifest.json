@@ -1,7 +1,7 @@
 {
-    "name": "Field Inspector",
+    "name": "Keefner Field Inspector",
     "short_name": "Inspector",
-    "description": "Offline inspection forms for field engineers",
+    "description": "Offline inspection forms for Keefner Mining & Geotech",
     "start_url": "./",
     "scope": "./",
     "display": "standalone",

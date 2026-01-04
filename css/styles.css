@@ -1,6 +1,6 @@
 /* ===== CSS Variables ===== */
 :root {
-    /* Dark theme - Industrial/Technical aesthetic */
+    /* Dark theme - Keefner Mining branding */
     --bg-primary: #0d0d12;
     --bg-secondary: #151520;
     --bg-tertiary: #1c1c2a;
@@ -11,7 +11,9 @@
     --text-secondary: #9898a8;
     --text-muted: #606070;
     
-    --accent-primary: #00d4aa;
+    /* Keefner brand colors */
+    --accent-primary: #1a1a1a;
+    --accent-highlight: #00d4aa;
     --accent-secondary: #00a8ff;
     --accent-warning: #ffb800;
     --accent-danger: #ff4757;
@@ -86,6 +88,19 @@ body {
     text-align: center;
 }
 
+.splash-logo {
+    margin: 0 auto 24px;
+    padding: 16px 24px;
+    background: #ffffff;
+    border-radius: var(--radius-md);
+    display: inline-block;
+}
+
+.splash-logo img {
+    height: 50px;
+    width: auto;
+}
+
 .splash-icon {
     width: 80px;
     height: 80px;
@@ -126,7 +141,7 @@ body {
     left: -50%;
     width: 50%;
     height: 100%;
-    background: var(--accent-primary);
+    background: var(--accent-highlight);
     border-radius: 2px;
     animation: splash-load 1s ease-in-out infinite;
 }
@@ -234,7 +249,7 @@ body {
     width: 40px;
     height: 40px;
     border: none;
-    background: var(--accent-primary);
+    background: var(--accent-highlight);
     color: var(--bg-primary);
     border-radius: var(--radius-md);
     display: flex;
@@ -304,7 +319,7 @@ body {
 }
 
 .nav-btn.active {
-    color: var(--accent-primary);
+    color: var(--accent-highlight);
 }
 
 .nav-btn:hover:not(.active) {
@@ -392,8 +407,8 @@ body {
 }
 
 .filter-tab.active {
-    background: var(--accent-primary);
-    border-color: var(--accent-primary);
+    background: var(--accent-highlight);
+    border-color: var(--accent-highlight);
     color: var(--bg-primary);
 }
 
@@ -457,7 +472,7 @@ body {
 .inspection-card:hover,
 .template-card:hover,
 .report-card:hover {
-    border-color: var(--accent-primary);
+    border-color: var(--accent-highlight);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
@@ -530,7 +545,7 @@ body {
 
 /* ===== Template Card Specific ===== */
 .template-card {
-    border-left: 4px solid var(--accent-primary);
+    border-left: 4px solid var(--accent-highlight);
 }
 
 .template-card .card-icon {
@@ -541,7 +556,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--accent-primary);
+    color: var(--accent-highlight);
 }
 
 .template-card .card-icon svg {
@@ -605,7 +620,7 @@ body {
 
 .setting-item input[type="text"]:focus,
 .setting-item input[type="email"]:focus {
-    border-color: var(--accent-primary);
+    border-color: var(--accent-highlight);
 }
 
 /* Toggle Switch */
@@ -643,7 +658,7 @@ body {
 }
 
 .setting-item.toggle input:checked + .toggle-switch {
-    background: var(--accent-primary);
+    background: var(--accent-highlight);
 }
 
 .setting-item.toggle input:checked + .toggle-switch::after {
@@ -670,7 +685,7 @@ body {
 
 .action-btn:hover {
     background: var(--bg-elevated);
-    border-color: var(--accent-primary);
+    border-color: var(--accent-highlight);
 }
 
 .action-btn.danger {
@@ -724,7 +739,7 @@ body {
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: var(--accent-primary);
+    color: var(--accent-highlight);
     margin-bottom: 12px;
     padding-bottom: 8px;
     border-bottom: 1px solid var(--border-color);
@@ -773,7 +788,7 @@ body {
 .form-input:focus,
 .form-textarea:focus,
 .form-select:focus {
-    border-color: var(--accent-primary);
+    border-color: var(--accent-highlight);
     box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
 }
 
@@ -825,7 +840,7 @@ body {
 }
 
 .number-btn:hover {
-    background: var(--accent-primary);
+    background: var(--accent-highlight);
     color: var(--bg-primary);
 }
 
@@ -843,7 +858,7 @@ body {
 .form-radio input {
     width: 20px;
     height: 20px;
-    accent-color: var(--accent-primary);
+    accent-color: var(--accent-highlight);
 }
 
 /* Date/Time Input */
@@ -907,8 +922,8 @@ body {
 }
 
 .add-photo-btn:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
+    border-color: var(--accent-highlight);
+    color: var(--accent-highlight);
 }
 
 .add-photo-btn svg {
@@ -1005,7 +1020,7 @@ body {
     -webkit-appearance: none;
     width: 24px;
     height: 24px;
-    background: var(--accent-primary);
+    background: var(--accent-highlight);
     border-radius: 50%;
     cursor: pointer;
     transition: transform 0.2s;
@@ -1019,7 +1034,7 @@ body {
     text-align: center;
     font-family: var(--font-mono);
     font-size: 0.9rem;
-    color: var(--accent-primary);
+    color: var(--accent-highlight);
     margin-top: 8px;
 }
 
@@ -1044,7 +1059,7 @@ body {
 }
 
 .form-btn.primary {
-    background: var(--accent-primary);
+    background: var(--accent-highlight);
     color: var(--bg-primary);
 }
 
@@ -1113,7 +1128,7 @@ body {
 }
 
 .field-item:hover {
-    border-color: var(--accent-primary);
+    border-color: var(--accent-highlight);
 }
 
 .field-item.dragging {
@@ -1196,8 +1211,8 @@ body {
 }
 
 .add-field-btn:hover {
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
+    border-color: var(--accent-highlight);
+    color: var(--accent-highlight);
 }
 
 .add-field-btn svg {
@@ -1238,7 +1253,7 @@ body {
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: var(--accent-primary);
+    color: var(--accent-highlight);
     margin-bottom: 12px;
     padding-bottom: 8px;
     border-bottom: 1px solid var(--border-color);
@@ -1409,18 +1424,18 @@ body {
 }
 
 .field-type-option:hover {
-    border-color: var(--accent-primary);
+    border-color: var(--accent-highlight);
 }
 
 .field-type-option.selected {
     background: rgba(0, 212, 170, 0.1);
-    border-color: var(--accent-primary);
+    border-color: var(--accent-highlight);
 }
 
 .field-type-option svg {
     width: 28px;
     height: 28px;
-    color: var(--accent-primary);
+    color: var(--accent-highlight);
 }
 
 .field-type-option span {
@@ -1555,7 +1570,7 @@ body {
 .signature-clear {
     background: transparent;
     border: none;
-    color: var(--accent-primary);
+    color: var(--accent-highlight);
     font-size: 0.95rem;
     cursor: pointer;
 }
@@ -1574,7 +1589,7 @@ body {
 .signature-save {
     width: 100%;
     padding: 14px;
-    background: var(--accent-primary);
+    background: var(--accent-highlight);
     border: none;
     border-radius: var(--radius-md);
     color: var(--bg-primary);
@@ -1725,4 +1740,60 @@ body {
         background: white;
         color: black;
     }
+}
+
+/* ===== Contact Section ===== */
+.contact-section {
+    text-align: center;
+}
+
+.contact-logo {
+    background: #ffffff;
+    padding: 16px 24px;
+    border-radius: var(--radius-md);
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.contact-logo img {
+    height: 40px;
+    width: auto;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-color);
+}
+
+.contact-item:hover,
+.contact-item:active {
+    background: var(--bg-elevated);
+    border-color: var(--accent-highlight);
+}
+
+.contact-item svg {
+    width: 22px;
+    height: 22px;
+    color: var(--accent-highlight);
+    flex-shrink: 0;
+}
+
+.contact-item span {
+    font-size: 0.95rem;
+    text-align: left;
+    line-height: 1.4;
 }
