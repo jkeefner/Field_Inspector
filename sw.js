@@ -3,20 +3,20 @@
  * Enables offline functionality
  */
 
-const CACHE_NAME = 'field-inspector-v1';
+const CACHE_NAME = 'field-inspector-v2';
 const ASSETS = [
-    '/',
-    '/index.html',
-    '/css/styles.css',
-    '/js/db.js',
-    '/js/templates.js',
-    '/js/inspections.js',
-    '/js/reports.js',
-    '/js/ui.js',
-    '/js/app.js',
-    '/manifest.json',
-    '/icons/icon-192.png',
-    '/icons/icon-512.png'
+    './',
+    './index.html',
+    './css/styles.css',
+    './js/db.js',
+    './js/templates.js',
+    './js/inspections.js',
+    './js/reports.js',
+    './js/ui.js',
+    './js/app.js',
+    './manifest.json',
+    './icons/icon-192.png',
+    './icons/icon-512.png'
 ];
 
 // Install event - cache assets
@@ -51,9 +51,6 @@ self.addEventListener('fetch', (event) => {
     // Skip non-GET requests
     if (event.request.method !== 'GET') return;
     
-    // Skip external requests
-    if (!event.request.url.startsWith(self.location.origin)) return;
-    
     event.respondWith(
         caches.match(event.request)
             .then((cachedResponse) => {
@@ -79,9 +76,9 @@ self.addEventListener('fetch', (event) => {
                         return response;
                     })
                     .catch(() => {
-                        // Return offline page for navigation requests
+                        // Return index.html for navigation requests
                         if (event.request.mode === 'navigate') {
-                            return caches.match('/index.html');
+                            return caches.match('./index.html');
                         }
                     });
             })
