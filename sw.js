@@ -3,7 +3,7 @@
  * Enables offline functionality
  */
 
-const CACHE_NAME = 'field-inspector-v6';
+const CACHE_NAME = 'field-inspector-v8';
 const ASSETS = [
     './',
     './index.html',

@@ -873,16 +873,21 @@ const App = {
         if (currentSection) html += '</div>';
         
         html += `<div class="report-actions form-actions">
-            <button class="form-btn secondary" id="download-report-btn">Download</button>
+            <button class="form-btn secondary" id="download-html-btn">HTML</button>
+            <button class="form-btn secondary" id="download-csv-btn">CSV</button>
             <button class="form-btn secondary" id="print-report-btn">Print</button>
             <button class="form-btn primary" id="share-report-btn">Share</button>
         </div>`;
         
         container.innerHTML = html;
         
-        document.getElementById('download-report-btn').addEventListener('click', async () => {
+        document.getElementById('download-html-btn').addEventListener('click', async () => {
             await Reports.downloadHTML(report.id);
-            UI.toast('Downloaded', 'success');
+            UI.toast('HTML Downloaded', 'success');
+        });
+        document.getElementById('download-csv-btn').addEventListener('click', async () => {
+            await Reports.downloadCSV(report.id);
+            UI.toast('CSV Downloaded', 'success');
         });
         document.getElementById('print-report-btn').addEventListener('click', () => Reports.print(report.id));
         document.getElementById('share-report-btn').addEventListener('click', async () => {

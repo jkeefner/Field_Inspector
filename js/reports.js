@@ -357,6 +357,184 @@ const Reports = {
         // Fallback to download
         await this.downloadHTML(reportId);
         return false;
+    },
+    
+    // CSV Export functionality
+    generateCSV(report) {
+        const { inspection, template, photos } = report;
+        const rows = [];
+        
+        // Header row
+        rows.push(['Field', 'Value', 'Field Type', 'Section']);
+        
+        // Metadata rows
+        rows.push(['Report Title', report.title, 'metadata', 'Report Info']);
+        rows.push(['Template', template.name, 'metadata', 'Report Info']);
+        rows.push(['Generated At', new Date(report.generatedAt).toLocaleString(), 'metadata', 'Report Info']);
+        rows.push(['Inspection ID', inspection.id, 'metadata', 'Report Info']);
+        rows.push(['Status', inspection.status, 'metadata', 'Report Info']);
+        if (inspection.completedAt) {
+            rows.push(['Completed At', new Date(inspection.completedAt).toLocaleString(), 'metadata', 'Report Info']);
+        }
+        
+        // Add blank row separator
+        rows.push(['', '', '', '']);
+        
+        // Field data
+        let currentSection = 'General';
+        
+        for (const field of template.fields) {
+            if (field.type === 'section') {
+                currentSection = field.label;
+                continue;
+            }
+            
+            if (field.type === 'note') continue;
+            
+            const value = inspection.data[field.id];
+            let displayValue = '';
+            
+            switch (field.type) {
+                case 'checkbox':
+                    displayValue = value ? 'Yes' : 'No';
+                    break;
+                case 'rating':
+                    displayValue = value ? `${value}/5` : 'Not rated';
+                    break;
+                case 'photo':
+                    const fieldPhotos = photos.filter(p => p.fieldId === field.id);
+                    displayValue = fieldPhotos.length > 0 ? `${fieldPhotos.length} photo(s) attached` : 'No photos';
+                    break;
+                case 'signature':
+                    displayValue = inspection.signatures?.[field.id] ? 'Signed' : 'Not signed';
+                    break;
+                case 'location':
+                    if (value?.latitude) {
+                        displayValue = `${value.latitude.toFixed(6)}, ${value.longitude.toFixed(6)}`;
+                    } else {
+                        displayValue = 'No location';
+                    }
+                    break;
+                case 'slider':
+                    displayValue = value !== undefined ? `${value}${field.unit || ''}` : '';
+                    break;
+                case 'select':
+                case 'radio':
+                    displayValue = value || '';
+                    break;
+                default:
+                    displayValue = value !== undefined && value !== null ? String(value) : '';
+            }
+            
+            rows.push([field.label, displayValue, field.type, currentSection]);
+        }
+        
+        // Convert to CSV string with proper escaping
+        const csvContent = rows.map(row => 
+            row.map(cell => {
+                // Escape quotes and wrap in quotes if contains comma, quote, or newline
+                const cellStr = String(cell);
+                if (cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')) {
+                    return `"${cellStr.replace(/"/g, '""')}"`;
+                }
+                return cellStr;
+            }).join(',')
+        ).join('\n');
+        
+        return csvContent;
+    },
+    
+    async downloadCSV(reportId) {
+        const report = await this.get(reportId);
+        if (!report) throw new Error('Report not found');
+        
+        const csv = this.generateCSV(report);
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${report.title.replace(/[^a-z0-9]/gi, '_')}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    },
+    
+    // Generate CSV for multiple reports (useful for batch export)
+    async generateBatchCSV(reportIds) {
+        const allRows = [];
+        
+        // Header with report identifier
+        allRows.push(['Report', 'Section', 'Field', 'Value', 'Field Type', 'Generated At']);
+        
+        for (const reportId of reportIds) {
+            const report = await this.get(reportId);
+            if (!report) continue;
+            
+            const { inspection, template, photos } = report;
+            let currentSection = 'General';
+            
+            for (const field of template.fields) {
+                if (field.type === 'section') {
+                    currentSection = field.label;
+                    continue;
+                }
+                
+                if (field.type === 'note') continue;
+                
+                const value = inspection.data[field.id];
+                let displayValue = '';
+                
+                switch (field.type) {
+                    case 'checkbox':
+                        displayValue = value ? 'Yes' : 'No';
+                        break;
+                    case 'rating':
+                        displayValue = value ? `${value}/5` : '';
+                        break;
+                    case 'photo':
+                        const fieldPhotos = photos.filter(p => p.fieldId === field.id);
+                        displayValue = `${fieldPhotos.length} photo(s)`;
+                        break;
+                    case 'signature':
+                        displayValue = inspection.signatures?.[field.id] ? 'Signed' : 'Not signed';
+                        break;
+                    case 'location':
+                        if (value?.latitude) {
+                            displayValue = `${value.latitude.toFixed(6)}, ${value.longitude.toFixed(6)}`;
+                        }
+                        break;
+                    case 'slider':
+                        displayValue = value !== undefined ? `${value}${field.unit || ''}` : '';
+                        break;
+                    default:
+                        displayValue = value !== undefined && value !== null ? String(value) : '';
+                }
+                
+                allRows.push([
+                    report.title,
+                    currentSection,
+                    field.label,
+                    displayValue,
+                    field.type,
+                    new Date(report.generatedAt).toLocaleString()
+                ]);
+            }
+        }
+        
+        // Convert to CSV
+        const csvContent = allRows.map(row => 
+            row.map(cell => {
+                const cellStr = String(cell);
+                if (cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')) {
+                    return `"${cellStr.replace(/"/g, '""')}"`;
+                }
+                return cellStr;
+            }).join(',')
+        ).join('\n');
+        
+        return csvContent;
     }
 };
 
