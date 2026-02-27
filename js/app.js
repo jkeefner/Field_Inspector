@@ -237,13 +237,15 @@ const App = {
         });
         
         this._initSignatureCanvas = () => {
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = rect.height;
+            // Use offsetWidth/offsetHeight (integer pixels) so the canvas intrinsic
+            // size exactly matches its CSS-rendered size — prevents flex overflow on desktop.
+            canvas.width  = canvas.offsetWidth  || 300;
+            canvas.height = canvas.offsetHeight || 200;
             ctx = canvas.getContext('2d');
             ctx.strokeStyle = '#000';
             ctx.lineWidth = 2;
             ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         };
     },
@@ -251,7 +253,10 @@ const App = {
     openSignature(callback) {
         this._signatureCallback = callback;
         document.getElementById('signature-modal').classList.add('visible');
-        setTimeout(() => this._initSignatureCanvas(), 100);
+        // Double rAF ensures the browser has fully laid out the modal before
+        // we sample the canvas dimensions (more reliable than a fixed timeout,
+        // especially on desktop Chrome where layout timing differs from mobile).
+        requestAnimationFrame(() => requestAnimationFrame(() => this._initSignatureCanvas()));
     },
     
     async loadView(viewName) {
