@@ -499,8 +499,11 @@ const Templates = {
     
     async init() {
         const existing = await DB.getAll(DB.stores.templates);
-        if (existing.length === 0) {
-            for (const template of this.defaultTemplates) {
+        const existingIds = new Set(existing.map(t => t.id));
+        // Add any default templates that are missing (handles fresh installs AND
+        // app updates that add new defaults without clearing user-created templates).
+        for (const template of this.defaultTemplates) {
+            if (!existingIds.has(template.id)) {
                 await DB.add(DB.stores.templates, { ...template });
             }
         }
