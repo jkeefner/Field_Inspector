@@ -3,7 +3,7 @@
  * Enables offline functionality
  */
 
-const CACHE_NAME = 'field-inspector-v8';
+const CACHE_NAME = 'field-inspector-v9';
 const ASSETS = [
     './',
     './index.html',
@@ -17,7 +17,9 @@ const ASSETS = [
     './manifest.json',
     './icons/logo.png',
     './icons/icon-192.png',
-    './icons/icon-512.png'
+    './icons/icon-512.png',
+    'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
 ];
 
 // Install event - cache assets
@@ -62,11 +64,11 @@ self.addEventListener('fetch', (event) => {
                 return fetch(event.request)
                     .then((response) => {
                         // Don't cache non-successful responses
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
+                        if (!response || response.status !== 200) {
                             return response;
                         }
                         
-                        // Clone the response
+                        // Cache basic (same-origin) and opaque (CDN) responses
                         const responseToCache = response.clone();
                         
                         caches.open(CACHE_NAME)
