@@ -29,6 +29,12 @@ const DB = {
             request.onsuccess = () => {
                 this.db = request.result;
                 console.log('Database opened successfully');
+                // Request persistent storage so IndexedDB data is not evicted
+                if (navigator.storage && navigator.storage.persist) {
+                    navigator.storage.persist().then(granted => {
+                        console.log('Persistent storage:', granted ? 'granted' : 'denied');
+                    });
+                }
                 resolve(this.db);
             };
             

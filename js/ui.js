@@ -167,19 +167,21 @@ const UI = {
     },
     
     // Render report card
-    renderReportCard(report, onClick) {
+    renderReportCard(report, onClick, onDelete) {
         const card = document.createElement('div');
         card.className = 'report-card';
-        card.onclick = () => onClick(report);
         
         const date = new Date(report.generatedAt);
         
         card.innerHTML = `
             <div class="card-header">
-                <div>
+                <div class="card-header-info" style="cursor:pointer;flex:1;">
                     <div class="card-title">${report.title}</div>
                     <div class="card-subtitle">${report.templateName}</div>
                 </div>
+                <button class="icon-btn delete-report-btn" title="Delete report" style="color:#e74c3c;background:none;border:none;cursor:pointer;padding:8px;flex-shrink:0;">
+                    ${this.icons.trash}
+                </button>
             </div>
             <div class="card-meta">
                 <div class="card-meta-item">
@@ -192,6 +194,12 @@ const UI = {
                 </div>
             </div>
         `;
+        
+        card.querySelector('.card-header-info').addEventListener('click', () => onClick(report));
+        card.querySelector('.delete-report-btn').addEventListener('click', async (e) => {
+            e.stopPropagation();
+            if (onDelete) onDelete(report);
+        });
         
         return card;
     },

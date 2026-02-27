@@ -331,15 +331,69 @@ const Reports = {
         };
     },
     
+    async downloadPDF(reportId) {
+        const report = await this.get(reportId);
+        if (!report) throw new Error('Report not found');
+
+        const html = await this.generateHTML(report);
+
+        // Render HTML in a hidden iframe, then capture with html2canvas → jsPDF
+        const iframe = document.createElement('iframe');
+        iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:800px;height:1px;border:none;';
+        document.body.appendChild(iframe);
+
+        await new Promise(resolve => {
+            iframe.onload = resolve;
+            iframe.srcdoc = html;
+        });
+
+        // Give the iframe a moment to fully render
+        await new Promise(r => setTimeout(r, 300));
+
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const canvas = await html2canvas(iframeDoc.body, {
+            scale: 1.5,
+            useCORS: true,
+            width: 800,
+            windowWidth: 800,
+            scrollY: 0
+        });
+
+        document.body.removeChild(iframe);
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'letter' });
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const imgData = canvas.toDataURL('image/jpeg', 0.92);
+        const imgWidth = pageWidth;
+        const imgHeight = (canvas.height / canvas.width) * imgWidth;
+
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft > 0) {
+            position -= pageHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+        pdf.save(`${report.title.replace(/[^a-z0-9]/gi, '_')}.pdf`);
+    },
+
     async share(reportId) {
         const report = await this.get(reportId);
         if (!report) throw new Error('Report not found');
-        
+
         if (navigator.share) {
             const html = await this.generateHTML(report);
             const blob = new Blob([html], { type: 'text/html' });
             const file = new File([blob], `${report.title}.html`, { type: 'text/html' });
-            
+
             try {
                 await navigator.share({
                     title: report.title,
@@ -353,9 +407,9 @@ const Reports = {
                 }
             }
         }
-        
-        // Fallback to download
-        await this.downloadHTML(reportId);
+
+        // Fallback: download as PDF
+        await this.downloadPDF(reportId);
         return false;
     },
     

@@ -334,8 +334,15 @@ const App = {
             empty.classList.remove('visible');
             list.style.display = '';
             reports.forEach(r => {
-                list.appendChild(UI.renderReportCard(r, (rep) => this.openReport(rep.id)));
-            });
+                    list.appendChild(UI.renderReportCard(r, (rep) => this.openReport(rep.id), async (rep) => {
+                        const confirmed = await UI.confirm('Delete Report', `Delete "${rep.title}"? This cannot be undone.`);
+                        if (confirmed) {
+                            await Reports.delete(rep.id);
+                            UI.toast('Report deleted', 'success');
+                            this.loadReports();
+                        }
+                    }));
+                });
         }
     },
     
@@ -875,8 +882,10 @@ const App = {
         html += `<div class="report-actions form-actions">
             <button class="form-btn secondary" id="download-html-btn">HTML</button>
             <button class="form-btn secondary" id="download-csv-btn">CSV</button>
+            <button class="form-btn secondary" id="download-pdf-btn">PDF</button>
             <button class="form-btn secondary" id="print-report-btn">Print</button>
             <button class="form-btn primary" id="share-report-btn">Share</button>
+            <button class="form-btn danger" id="delete-report-btn">Delete</button>
         </div>`;
         
         container.innerHTML = html;
@@ -889,9 +898,22 @@ const App = {
             await Reports.downloadCSV(report.id);
             UI.toast('CSV Downloaded', 'success');
         });
+        document.getElementById('download-pdf-btn').addEventListener('click', async () => {
+            UI.toast('Generating PDF...', 'info');
+            await Reports.downloadPDF(report.id);
+            UI.toast('PDF Downloaded', 'success');
+        });
         document.getElementById('print-report-btn').addEventListener('click', () => Reports.print(report.id));
         document.getElementById('share-report-btn').addEventListener('click', async () => {
             if (await Reports.share(report.id)) UI.toast('Shared', 'success');
+        });
+        document.getElementById('delete-report-btn').addEventListener('click', async () => {
+            const confirmed = await UI.confirm('Delete Report', `Delete "${report.title}"? This cannot be undone.`);
+            if (confirmed) {
+                await Reports.delete(report.id);
+                UI.toast('Report deleted', 'success');
+                this.goBack();
+            }
         });
     },
     
