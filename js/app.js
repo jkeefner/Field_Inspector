@@ -884,13 +884,17 @@ const App = {
         
         if (currentSection) html += '</div>';
         
-        html += `<div class="report-actions form-actions">
-            <button class="form-btn secondary" id="download-html-btn">HTML</button>
-            <button class="form-btn secondary" id="download-csv-btn">CSV</button>
-            <button class="form-btn secondary" id="download-pdf-btn">PDF</button>
-            <button class="form-btn secondary" id="print-report-btn">Print</button>
-            <button class="form-btn primary" id="share-report-btn">Share</button>
-            <button class="form-btn danger" id="delete-report-btn">Delete</button>
+        html += `<div class="report-actions">
+            <div class="report-action-row">
+                <button class="form-btn secondary" id="download-pdf-btn">📄 PDF</button>
+                <button class="form-btn secondary" id="download-csv-btn">📊 CSV</button>
+                <button class="form-btn secondary" id="download-html-btn">🌐 HTML</button>
+                <button class="form-btn secondary" id="print-report-btn">🖨 Print</button>
+            </div>
+            <div class="report-action-row">
+                <button class="form-btn primary" id="share-report-btn">Share</button>
+                <button class="form-btn danger" id="delete-report-btn">Delete</button>
+            </div>
         </div>`;
         
         container.innerHTML = html;

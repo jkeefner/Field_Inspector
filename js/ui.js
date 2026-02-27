@@ -175,11 +175,11 @@ const UI = {
         
         card.innerHTML = `
             <div class="card-header">
-                <div class="card-header-info" style="cursor:pointer;flex:1;">
+                <div class="card-header-info">
                     <div class="card-title">${report.title}</div>
                     <div class="card-subtitle">${report.templateName}</div>
                 </div>
-                <button class="icon-btn delete-report-btn" title="Delete report" style="color:#e74c3c;background:none;border:none;cursor:pointer;padding:8px;flex-shrink:0;">
+                <button class="report-delete-btn" title="Delete report" aria-label="Delete report">
                     ${this.icons.trash}
                 </button>
             </div>
@@ -196,7 +196,7 @@ const UI = {
         `;
         
         card.querySelector('.card-header-info').addEventListener('click', () => onClick(report));
-        card.querySelector('.delete-report-btn').addEventListener('click', async (e) => {
+        card.querySelector('.report-delete-btn').addEventListener('click', (e) => {
             e.stopPropagation();
             if (onDelete) onDelete(report);
         });
